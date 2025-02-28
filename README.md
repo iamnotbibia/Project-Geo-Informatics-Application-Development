@@ -44,7 +44,15 @@
 
 ---
 
+### **Developers:**
+- Developer 1: 653380206-2 นางสาวปาริชาติ หงษ์ษา (โดนัท)
+- Developer 2: 653380323-8 นางสาวมณิฐชญาณ์ ธมนันท์พงษา (เมษา)
+
+---
+
 ### **Useful Link:**
 
 - [**`ClassBreaksRenderer`**](https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-ClassBreaksRenderer.html#classBreakInfos)
 - [**`UniqueValueRenderer`**](https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-UniqueValueRenderer.html#uniqueValueInfos)
+
+

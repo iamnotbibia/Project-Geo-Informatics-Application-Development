@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌍 Search Widget</title>
+  <style>
+    html,
+    body,
+    #viewDiv {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
+  <script>
+    var esriConfig = {
+      apiKey:
+        "AAPTxy8BH1VEsoebNVZXo8HurHrgGWnbagqcS1pvyFqEk4NHm0yv-fWMC82ZakPZdqWvjV73P4oOZR1rqqeVRmRonXyJKRl_AWY_2YRpJW0s1W--y_wCsfRRyN-RjbOQLDJWbUUEpN73vvPkyPIEnD4gVeRtMgH4KBsGVcxP3Vcz0dp2Dg-hcBbbkAI_R1zaYQCz1S47z6MXfxWayzWNRoH8Q5jBrv-DZw8VpWCKenUcR_8.AT1_NWDiwEpv",
+    };
+  </script>
+  <script src="https://js.arcgis.com/4.27/"></script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+
+  <script>
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Editor",
+    ], function (Map, MapView, FeatureLayer, Editor) {
+      // สร้าง Layer Type FeatureLayer
+      const japanLocationFeatureLayer = new FeatureLayer({
+        url: "https://services5.arcgis.com/aDEhc2tPzGZDx3cx/arcgis/rest/services/Japan_Layer/FeatureServer",
+        outFields: ["*"],
+      });
+
+      // สร้างแผนที่
+      const map = new Map({
+        basemap: "streets-navigation-vector",
+        layers: [japanLocationFeatureLayer], // เพิ่ม Feature Layer ลงในแผนที่
+      });
+
+      // สร้าง View
+      const view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [139.76884133055768,35.6803762872687], // Tokyo
+        zoom: 12,
+      });
+
+      view.when(() => {
+        // เมื่อ view resdy หรือ map ทำการโหลดเสร็จเรียนร้อยแล้ว
+        // ค่อยรันคำสั่ง code ที่อยู่ในนี้
+
+        const editor = new Editor({
+          view: view
+        });
+
+        // Add the widget to the view
+        view.ui.add(editor, "top-right");
+      });
+
+      // Ref: https://developers.arcgis.com/javascript/latest/sample-code/widgets-editor-basic/
+    });
+  </script>
+</body>
+
+</html>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UFT-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ค้นหาสถานที่ท่องเที่ยวในญี่ปุ่น</title>
+    <title>ค้นหาโรงเรียนในกรุงเทพฯ</title>
     <style>
         html,
         body,
@@ -19,7 +19,7 @@
     <script>
         var esriConfig = {
             apiKey:
-                "AAPTxy8BH1VEsoebNVZXo8HurHrgGWnbagqcS1pvyFqEk4NHm0yv-fWMC82ZakPZdqWvjV73P4oOZR1rqqeVRmRonXyJKRl_AWY_2YRpJW0s1W--y_wCsfRRyN-RjbOQLDJWbUUEpN73vvPkyPIEnD4gVeRtMgH4KBsGVcxP3Vcz0dp2Dg-hcBbbkAI_R1zaYQCz1S47z6MXfxWayzWNRoH8Q5jBrv-DZw8VpWCKenUcR_8.AT1_NWDiwEpv", // แก้เป็น API Key ของตัวเอง
+                "AAPTxy8BH1VEsoebNVZXo8HurHrgGWnbagqcS1pvyFqEk4NHm0yv-fWMC82ZakPZdqWvjV73P4oOZR1rqqeVRmRonXyJKRl_AWY_2YRpJW0s1W--y_wCsfRRyN-RjbOQLDJWbUUEpN73vvPkyPIEnD4gVeRtMgH4KBsGVcxP3Vcz0dp2Dg-hcBbbkAI_R1zaYQCz1S47z6MXfxWayzWNRoH8Q5jBrv-DZw8VpWCKenUcR_8.AT1_NWDiwEpv",
         };
     </script>
     <script src="https://js.arcgis.com/4.29/"></script>
@@ -39,27 +39,26 @@
                 type: "simple",
                 symbol: {
                     type: "picture-marker",
-                    url: "https://cdn-icons-png.flaticon.com/128/5695/5695672.png",
-                    width: "48px",
-                    height: "48px",
+                    url: "https://cdn-icons-png.flaticon.com/128/8949/8949013.png",
+                    width: "42px",
+                    height: "42px",
                 },
             };
 
             // Add Feature Layer ที่เก็บข้อมูล Japan Location ไว้ ด้วย Url Map Service ของตัวเอง
-            const japanLocationFeatureLayer = new FeatureLayer({
-                url: "https://services5.arcgis.com/aDEhc2tPzGZDx3cx/arcgis/rest/services/Japan_Layer/FeatureServer",
+            const SchoolinBankokFeatureLayer = new FeatureLayer({
+                url: "https://services5.arcgis.com/aDEhc2tPzGZDx3cx/arcgis/rest/services/School_in_Bangkok/FeatureServer",
                 outField: ["*"],
                 renderer: pinRenderer,
                 popupTemplate: {
-                    title: "{Location_name}",
+                    title: "{school_name}",
                     content: `
-                        <b>🏯 ประเภทของสถานที่:</b> {Location_Type} <br>
-                        <b>⭐ รีวิว:</b> {Review} / 5<br>
-                        <b>💬 คำอธิบาย:</b> {Description} <br>
-                        <b>💰 ค่าเข้าชม:</b> {Price} <br>
-                        <b>⏱️ เวลาทำการ:</b> {Opening_Times} <br>
-                        <b>🧳 วิธีการเดินทาง:</b> {Travel_Options} <br><br>
-                        <img src="{Image_URL}" alt="Japan Image" width="100%">
+                        <b>🏫 ที่อยู่:</b> {location} <br>
+                        <b>🎒 ประเภทโรงเรียน:</b> {school_type} <br>
+                        <b>📄 เกี่ยวกับโรงเรียน:</b> {description} <br>
+                        <b>🗓️ หลักสูตรการเรียน:</b> {curriculum} <br>
+                        <b>💰 ค่าเทอม:</b> {tuition_fee} <br><br>
+                        <img src="{Image_URL}" alt="School Image" width="100%">
                     `,
                 },
             });
@@ -67,14 +66,14 @@
             // สร้างแผนที่ 
             const map = new Map({
                 basemap: "streets-navigation-vector",
-                layers: [japanLocationFeatureLayer],
+                layers: [SchoolinBankokFeatureLayer],
             });
 
             // สร้าง View
             const view = new MapView({
                 container: "viewDiv",
                 map: map,
-                center: [139.76884133055768,35.6803762872687], // Tokyo
+                center: [100.55, 13.7367], 
                 zoom: 12,
             });
         })

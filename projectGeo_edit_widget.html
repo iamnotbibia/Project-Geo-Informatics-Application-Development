@@ -35,27 +35,27 @@
       "esri/widgets/Editor",
     ], function (Map, MapView, FeatureLayer, Editor) {
       // สร้าง Layer Type FeatureLayer
-      const japanLocationFeatureLayer = new FeatureLayer({
-        url: "https://services5.arcgis.com/aDEhc2tPzGZDx3cx/arcgis/rest/services/Japan_Layer/FeatureServer",
+      const SchoolinBankokFeatureLayer = new FeatureLayer({
+        url: "https://services5.arcgis.com/aDEhc2tPzGZDx3cx/arcgis/rest/services/School_in_Bangkok/FeatureServer",
         outFields: ["*"],
       });
 
       // สร้างแผนที่
       const map = new Map({
         basemap: "streets-navigation-vector",
-        layers: [japanLocationFeatureLayer], // เพิ่ม Feature Layer ลงในแผนที่
+        layers: [SchoolinBankokFeatureLayer], // เพิ่ม Feature Layer ลงในแผนที่
       });
 
       // สร้าง View
       const view = new MapView({
         container: "viewDiv",
         map: map,
-        center: [139.76884133055768,35.6803762872687], // Tokyo
+        center: [100.5231, 13.7367], 
         zoom: 12,
       });
 
       view.when(() => {
-        // เมื่อ view resdy หรือ map ทำการโหลดเสร็จเรียนร้อยแล้ว
+        // เมื่อ view resdy หรือ map ทำการโหลดเสร็จเรียบร้อยแล้ว
         // ค่อยรันคำสั่ง code ที่อยู่ในนี้
 
         const editor = new Editor({

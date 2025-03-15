@@ -129,6 +129,28 @@
                 },
             };
 
+            // 🔹 Define Heatmap Renderer
+            const heatmapRenderer = new HeatmapRenderer({
+                field: "age", // บอกให้ Heatmap ใช้ค่าในคอลัมน์ rating ของข้อมูล (เช่น 4.5 หรือ 4.8) เป็นตัวกำหนดระดับความหนาแน่น (density)
+                colorStops: [
+                    { color: "rgba(63, 40, 102, 0)", ratio: 0 }, // สีสำหรับแสดงบนพื้นที่ความหนาแน่นต่ำสุด
+                    { color: "#472b77", ratio: 0.083 },
+                    { color: "#4e2d87", ratio: 0.166 },
+                    { color: "#563098", ratio: 0.249 },
+                    { color: "#5d32a8", ratio: 0.332 },
+                    { color: "#6735be", ratio: 0.415 },
+                    { color: "#7139d4", ratio: 0.498 },
+                    { color: "#7b3ce9", ratio: 0.581 },
+                    { color: "#853fff", ratio: 0.664 },
+                    { color: "#a46fbf", ratio: 0.747 },
+                    { color: "#c29f80", ratio: 0.83 },
+                    { color: "#e0cf40", ratio: 0.913 },
+                    { color: "#ffff00", ratio: 1 },
+                ],
+                maxDensity: 0.01, // กำหนดว่าความหนาแน่นสูงสุดที่จะแสดงผลใน Heatmap คือ 0.01 (ใช้ปรับขนาดหรือช่วงให้เหมาะสมกับข้อมูล)
+                minDensity: 0, // กำหนดความหนาแน่นต่ำสุดที่จะเริ่มแสดงผล (ค่า 0 หมายถึงไม่มีข้อมูล)
+            });
+
             const ClassBreaksRenderer = {
                 type: "class-breaks",
                 field: "age",
@@ -174,7 +196,7 @@
                 url: csvUrl,
                 latitudeField: "latitude",
                 longitudeField: "longitude",
-                renderer: ClassBreaksRenderer,
+                renderer: heatmapRenderer,
                 popupTemplate: {
                     title: "{name}",
                     content: `
@@ -223,7 +245,7 @@
             const SchoolinBankokFeatureLayer = new FeatureLayer({
                 url: "https://services5.arcgis.com/aDEhc2tPzGZDx3cx/arcgis/rest/services/School_in_Bangkok/FeatureServer",
                 outField: ["*"],
-                renderer: uniqueRender,
+                renderer: heatmapRenderer,
                 popupTemplate: {
                     title: "{school_name}",
                     content: `
@@ -232,7 +254,7 @@
                         <b>📄 เกี่ยวกับโรงเรียน:</b> {description} <br>
                         <b>🗓️ หลักสูตรการเรียน:</b> {curriculum} <br>
                         <b>💰 ค่าเทอม:</b> {tuition_fee} <br>
-                        <b>🗒️ อายุ:</b> {age} <br>
+                        <b>🗒️ อายุ:</b> {age} ปี<br>
                         <b>🌐 เว็บไซต์:</b> <a href="{website}">คลิกที่นี่</a> <br><br>
                         <img src="{Image_URL}" alt="School Image" width="100%">
                     `,
@@ -250,7 +272,7 @@
                 container: "viewDiv",
                 map: map,
                 center: [100.55, 13.7399],
-                zoom: 12,
+                zoom: 11,
             });
 
             const drawGraphicsLayer = new GraphicsLayer();
@@ -366,6 +388,17 @@
 
             view.ui.add(searchWidget, {
                 position: "top-right",
+            });
+
+            // 🔹 Change Renderer on Zoom
+            view.watch("zoom", function (newZoom) {
+                if (newZoom >= 15) {
+                    templeLayer.renderer = ClassBreaksRenderer; // Switch to pin renderer at higher zoom levels
+                    SchoolinBankokFeatureLayer.renderer = uniqueRender;
+                } else {
+                    templeLayer.renderer = heatmapRenderer; // Use heatmap renderer at lower zoom levels
+                    SchoolinBankokFeatureLayer.renderer = heatmapRenderer;
+                }
             });
         })
     </script>

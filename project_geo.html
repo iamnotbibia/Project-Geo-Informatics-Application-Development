@@ -77,7 +77,6 @@
             "esri/Map",
             "esri/views/MapView",
             "esri/layers/FeatureLayer",
-            "esri/renderers/HeatmapRenderer",
             "esri/widgets/Search",
             "esri/layers/CSVLayer",
             "esri/renderers/HeatmapRenderer",
@@ -130,6 +129,28 @@
                 },
             };
 
+            // 🔹 Define Heatmap Renderer
+            const heatmapRenderer = new HeatmapRenderer({
+                field: "age", // บอกให้ Heatmap ใช้ค่าในคอลัมน์ rating ของข้อมูล (เช่น 4.5 หรือ 4.8) เป็นตัวกำหนดระดับความหนาแน่น (density)
+                colorStops: [
+                    { color: "rgba(255, 182, 193, 0)", ratio: 0 }, // ชมพูอ่อนใส (ความหนาแน่นต่ำสุด)
+                    { color: "#FFC1CC", ratio: 0.083 }, // ชมพูพาสเทล
+                    { color: "#FFB6C1", ratio: 0.166 }, // ชมพูระยิบ
+                    { color: "#FF9999", ratio: 0.249 }, // กลีบกุหลาบ
+                    { color: "#FF80AB", ratio: 0.332 }, // ชมพูหวาน
+                    { color: "#FF69B4", ratio: 0.415 }, // ชมพูเข้ม
+                    { color: "#DB7093", ratio: 0.498 }, // ชมพูแดง
+                    { color: "#C71585", ratio: 0.581 }, // ม่วงกุหลาบ
+                    { color: "#FF69B4", ratio: 0.664 }, // ชมพูสดใส (จุดเด่น)
+                    { color: "#FFB6C1", ratio: 0.747 }, // ชมพูระยิบกลับมา
+                    { color: "#FFDAB9", ratio: 0.83 }, // พีชอ่อน
+                    { color: "#FFE4E1", ratio: 0.913 }, // ครีมชมพู
+                    { color: "#FFB6C1", ratio: 1 }, // ชมพูพาสเทล (สูงสุด)
+                ],
+                maxDensity: 0.01, // กำหนดว่าความหนาแน่นสูงสุดที่จะแสดงผลใน Heatmap คือ 0.01 (ใช้ปรับขนาดหรือช่วงให้เหมาะสมกับข้อมูล)
+                minDensity: 0, // กำหนดความหนาแน่นต่ำสุดที่จะเริ่มแสดงผล (ค่า 0 หมายถึงไม่มีข้อมูล)
+            });
+
             const ClassBreaksRenderer = {
                 type: "class-breaks",
                 field: "age",
@@ -175,7 +196,7 @@
                 url: csvUrl,
                 latitudeField: "latitude",
                 longitudeField: "longitude",
-                renderer: ClassBreaksRenderer,
+                renderer: heatmapRenderer,
                 popupTemplate: {
                     title: "{name}",
                     content: `
@@ -224,7 +245,7 @@
             const SchoolinBankokFeatureLayer = new FeatureLayer({
                 url: "https://services5.arcgis.com/aDEhc2tPzGZDx3cx/arcgis/rest/services/School_in_Bangkok/FeatureServer",
                 outField: ["*"],
-                renderer: uniqueRender,
+                renderer: heatmapRenderer,
                 popupTemplate: {
                     title: "{school_name}",
                     content: `
@@ -371,5 +392,4 @@
         })
     </script>
 </body>
-
 </html>

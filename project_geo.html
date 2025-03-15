@@ -14,24 +14,40 @@
             padding: 0;
         }
 
+        #title {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            z-index: 10;
+        }
+
         .esri-search {
-            width: 300px !important; /* ปรับความกว้างของ search box */
+            width: 300px !important;
+            /* ปรับความกว้างของ search box */
             max-width: 100%;
         }
 
         .esri-search__input {
-            font-size: 16px !important; /* ปรับขนาดตัวอักษรในช่องค้นหา */
+            font-size: 16px !important;
+            /* ปรับขนาดตัวอักษรในช่องค้นหา */
             /* padding: 10px 12px !important; ปรับ padding ให้ช่องค้นหาดูกว้างขึ้น */
         }
 
         .esri-search__container {
-            border-radius: 8px !important; /* ทำให้ขอบโค้งมน */
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2) !important; /* เพิ่มเงาให้ดูเด่น */
+            border-radius: 8px !important;
+            /* ทำให้ขอบโค้งมน */
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2) !important;
+            /* เพิ่มเงาให้ดูเด่น */
         }
 
         .esri-search__submit-button {
-            width: 45
-            px !important;
+            width: 45 px !important;
             height: 30px !important;
         }
     </style>
@@ -260,13 +276,13 @@
 
             // ผูก Event/Logic การทำงานให้ปุ่ม Clear
             clearButton.addEventListener("click", () => {
-                drawGraphicsLayer.removeAll(); 
-                templeLayer.featureEffect = null; 
-                SchoolinBankokFeatureLayer.featureEffect = null; 
+                drawGraphicsLayer.removeAll();
+                templeLayer.featureEffect = null;
+                SchoolinBankokFeatureLayer.featureEffect = null;
                 // รีเซ็ตสไตล์เริ่มต้นให้เลเยอร์กลับเป็นปกติ
-                templeLayer.renderer = templeLayer.renderer; 
-                SchoolinBankokFeatureLayer.renderer = SchoolinBankokFeatureLayer.renderer; 
-                view.refresh(); 
+                templeLayer.renderer = templeLayer.renderer;
+                SchoolinBankokFeatureLayer.renderer = SchoolinBankokFeatureLayer.renderer;
+                view.refresh();
             });
 
             // กรองข้อมูลทั้งวัดและโรงเรียนเมื่อวาดวงกลมเสร็จ
@@ -299,13 +315,13 @@
                     // Search Temple
                     {
                         layer: templeLayer,
-                        name: "Temple in Bangkok", // ชื่อสำหรับแสดง data source
-                        searchFields: ["name", "age"], // Search by cafe name & address
+                        name: "🛕 Temple in Bangkok", 
+                        searchFields: ["name", "address"], // Search by cafe name & address
                         displayField: "name",
                         exactMatch: false,
                         outFields: ["*"],
                         placeholder: "🔍 ค้นหาวัดในกรุงเทพฯ...",
-                        suggestionTemplate: "{name} - {age}",
+                        suggestionTemplate: "{name} - {address}",
                         popupTemplate: {
                             title: "{name}",
                             content: `
@@ -321,7 +337,7 @@
                     // Search School
                     {
                         layer: SchoolinBankokFeatureLayer,
-                        name: "School in Bangkok", // ชื่อสำหรับแสดง data source
+                        name: "🚌 School in Bangkok", // ชื่อสำหรับแสดง data source
                         searchFields: ["school_name", "school_type"], // Search by cafe name & address
                         displayField: "school_name",
                         exactMatch: false,

@@ -2,52 +2,76 @@
 <html lang="en">
 
 <head>
-    <meta charset="UFT-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🔍 ค้นหาโรงเรียนและวัดในกรุงเทพฯ</title>
+    <title>☀️ โรงเรียนและวัดในกรุงเทพฯ</title>
     <style>
         html,
         body,
         #viewDiv {
             height: 100%;
-            width: 100%;
             margin: 0;
             padding: 0;
         }
 
+        #title {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            z-index: 10;
+        }
+
         .esri-search {
-            width: 300px !important; /* ปรับความกว้างของ search box */
+            width: 300px !important;
+            /* ปรับความกว้างของ search box */
             max-width: 100%;
         }
 
         .esri-search__input {
-            font-size: 16px !important; /* ปรับขนาดตัวอักษรในช่องค้นหา */
+            font-size: 16px !important;
+            /* ปรับขนาดตัวอักษรในช่องค้นหา */
             /* padding: 10px 12px !important; ปรับ padding ให้ช่องค้นหาดูกว้างขึ้น */
         }
 
         .esri-search__container {
-            border-radius: 8px !important; /* ทำให้ขอบโค้งมน */
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2) !important; /* เพิ่มเงาให้ดูเด่น */
+            border-radius: 8px !important;
+            /* ทำให้ขอบโค้งมน */
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2) !important;
+            /* เพิ่มเงาให้ดูเด่น */
         }
 
         .esri-search__submit-button {
-            width: 45
-            px !important;
+            width: 45 px !important;
             height: 30px !important;
         }
     </style>
     <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
     <script>
         var esriConfig = {
-            apiKey:
-                "AAPTxy8BH1VEsoebNVZXo8HurHrgGWnbagqcS1pvyFqEk4NHm0yv-fWMC82ZakPZdqWvjV73P4oOZR1rqqeVRmRonXyJKRl_AWY_2YRpJW0s1W--y_wCsfRRyN-RjbOQLDJWbUUEpN73vvPkyPIEnD4gVeRtMgH4KBsGVcxP3Vcz0dp2Dg-hcBbbkAI_R1zaYQCz1S47z6MXfxWayzWNRoH8Q5jBrv-DZw8VpWCKenUcR_8.AT1_NWDiwEpv",
+            apiKey: "AAPTxy8BH1VEsoebNVZXo8HurHrgGWnbagqcS1pvyFqEk4NHm0yv-fWMC82ZakPZdqWvjV73P4oOZR1rqqeVRmRonXyJKRl_AWY_2YRpJW0s1W--y_wCsfRRyN-RjbOQLDJWbUUEpN73vvPkyPIEnD4gVeRtMgH4KBsGVcxP3Vcz0dp2Dg-hcBbbkAI_R1zaYQCz1S47z6MXfxWayzWNRoH8Q5jBrv-DZw8VpWCKenUcR_8.AT1_NWDiwEpv",
         };
     </script>
     <script src="https://js.arcgis.com/4.29/"></script>
 </head>
 
 <body>
+    <div id="title">🐻 ค้นหาวัดและโรงเรียนในกรุงเทพฯ! </div>
     <div id="viewDiv"></div>
+    <div id="select-by-circle" class="esri-widget esri-widget--button esri-widget esri-interactive"
+        title="Select features by circle">
+        <span class="esri-icon-checkbox-unchecked"></span>
+    </div>
+    <div id="clear-selection" class="esri-widget esri-widget--button esri-widget esri-interactive"
+        title="Clear selection">
+        <span class="esri-icon-erase"></span>
+    </div>
+
     <script>
         require([
             "esri/Map",
@@ -56,7 +80,9 @@
             "esri/renderers/HeatmapRenderer",
             "esri/widgets/Search",
             "esri/layers/CSVLayer",
-        ], function (Map, MapView, FeatureLayer, Search, CSVLayer,HeatmapRenderer,) {
+            "esri/widgets/Sketch/SketchViewModel",
+            "esri/layers/GraphicsLayer",
+        ], function (Map, MapView, FeatureLayer, Search, CSVLayer, SketchViewModel, GraphicsLayer) {
 
             // สร้างข้อมูล csv เป็น String
             const csvTempleData = `
@@ -128,7 +154,7 @@
                             maxValue: 100,
                             symbol: {
                                 type: "picture-marker",
-                                url: "https://cdn-icons-png.freepik.com/256/7110/7110282.png?ga=GA1.1.1278761421.1742035229&semt=ais_hybrid", 
+                                url: "https://cdn-icons-png.freepik.com/256/7110/7110282.png?ga=GA1.1.1278761421.1742035229&semt=ais_hybrid",
                                 width: "48px",
                                 height: "48px"
                             },
@@ -139,7 +165,7 @@
                             maxValue: 200,
                             symbol: {
                                 type: "picture-marker",
-                                url: "https://cdn-icons-png.flaticon.com/128/2095/2095637.png", 
+                                url: "https://cdn-icons-png.flaticon.com/128/2095/2095637.png",
                                 width: "48px",
                                 height: "48px"
                             },
@@ -147,10 +173,10 @@
                         },
                         {
                             minValue: 201,
-                            maxValue: Infinity, 
+                            maxValue: Infinity,
                             symbol: {
                                 type: "picture-marker",
-                                url: "https://cdn-icons-png.flaticon.com/128/7224/7224114.png", 
+                                url: "https://cdn-icons-png.flaticon.com/128/7224/7224114.png",
                                 width: "48px",
                                 height: "48px"
                             },
@@ -221,8 +247,66 @@
             const view = new MapView({
                 container: "viewDiv",
                 map: map,
-                center: [100.55, 13.7367],
+                center: [100.55, 13.7399],
                 zoom: 12,
+            });
+
+            const drawGraphicsLayer = new GraphicsLayer();
+            map.add(drawGraphicsLayer);
+
+            // Setup และเรียกใช้ SketchViewModel
+            const sketchViewModel = new SketchViewModel({
+                view: view,
+                layer: drawGraphicsLayer,
+            });
+
+            // วางปุ่ม Draw Circle ไว้มุมซ้ายบนของแผนที่
+            view.ui.add("select-by-circle", "top-left");
+            const selectButton = document.getElementById("select-by-circle");
+
+            // ผูก Event/Logic การทำงานให้ปุ่ม Draw Circle
+            selectButton.addEventListener("click", () => {
+                drawGraphicsLayer.removeAll();
+                view.closePopup();
+                sketchViewModel.create("circle"); // เปลี่ยนเป็นวงกลม
+            });
+
+            // วางปุ่ม Clear ไว้มุมซ้ายบนของแผนที่
+            const clearButton = document.getElementById("clear-selection");
+            view.ui.add("clear-selection", "top-left");
+
+            // ผูก Event/Logic การทำงานให้ปุ่ม Clear
+            clearButton.addEventListener("click", () => {
+                drawGraphicsLayer.removeAll();
+                templeLayer.featureEffect = null;
+                SchoolinBankokFeatureLayer.featureEffect = null;
+                // รีเซ็ตสไตล์เริ่มต้นให้เลเยอร์กลับเป็นปกติ
+                templeLayer.renderer = templeLayer.renderer;
+                SchoolinBankokFeatureLayer.renderer = SchoolinBankokFeatureLayer.renderer;
+                view.refresh();
+            });
+
+            // กรองข้อมูลทั้งวัดและโรงเรียนเมื่อวาดวงกลมเสร็จ
+            sketchViewModel.on("create", async (drawData) => {
+                if (drawData.state === "complete") {
+                    console.log("drawData", drawData.graphic.geometry);
+                    // กรอง templeLayer
+                    templeLayer.featureEffect = {
+                        filter: {
+                            geometry: drawData.graphic.geometry, // กรองตามวงกลมที่วาด
+                        },
+                        includedEffect: "drop-shadow(3px, 3px, 3px, gray) brightness(1.2)", // วัดในวงกลม
+                        excludedEffect: "opacity(30%)", // วัดนอกวงกลม
+                    };
+                    // กรอง SchoolinBankokFeatureLayer
+                    SchoolinBankokFeatureLayer.featureEffect = {
+                        filter: {
+                            geometry: drawData.graphic.geometry,
+                        },
+                        includedEffect: "drop-shadow(3px, 3px, 3px, gray) brightness(1.2)",
+                        excludedEffect: "opacity(30%)",
+                    };
+                }
             });
 
             // Search 
@@ -232,13 +316,13 @@
                     // Search Temple
                     {
                         layer: templeLayer,
-                        name: "Temple in Bangkok", // ชื่อสำหรับแสดง data source
-                        searchFields: ["name", "age"], // Search by cafe name & address
+                        name: "🛕 Temple in Bangkok", 
+                        searchFields: ["name", "address"], // Search by cafe name & address
                         displayField: "name",
                         exactMatch: false,
                         outFields: ["*"],
                         placeholder: "🔍 ค้นหาวัดในกรุงเทพฯ...",
-                        suggestionTemplate: "{name} - {age}",
+                        suggestionTemplate: "{name} - {address}",
                         popupTemplate: {
                             title: "{name}",
                             content: `
@@ -254,7 +338,7 @@
                     // Search School
                     {
                         layer: SchoolinBankokFeatureLayer,
-                        name: "School in Bangkok", // ชื่อสำหรับแสดง data source
+                        name: "🚌 School in Bangkok", // ชื่อสำหรับแสดง data source
                         searchFields: ["school_name", "school_type"], // Search by cafe name & address
                         displayField: "school_name",
                         exactMatch: false,

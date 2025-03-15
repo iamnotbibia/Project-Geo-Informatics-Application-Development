@@ -14,6 +14,27 @@
             margin: 0;
             padding: 0;
         }
+
+        .esri-search {
+            width: 300px !important; /* ปรับความกว้างของ search box */
+            max-width: 100%;
+        }
+
+        .esri-search__input {
+            font-size: 16px !important; /* ปรับขนาดตัวอักษรในช่องค้นหา */
+            /* padding: 10px 12px !important; ปรับ padding ให้ช่องค้นหาดูกว้างขึ้น */
+        }
+
+        .esri-search__container {
+            border-radius: 8px !important; /* ทำให้ขอบโค้งมน */
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2) !important; /* เพิ่มเงาให้ดูเด่น */
+        }
+
+        .esri-search__submit-button {
+            width: 45
+            px !important;
+            height: 30px !important;
+        }
     </style>
     <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
     <script>
@@ -201,6 +222,63 @@
                 map: map,
                 center: [100.55, 13.7367],
                 zoom: 12,
+            });
+
+            // Search 
+            const searchWidget = new Search({
+                view: view,
+                sources: [
+                    // Search Temple
+                    {
+                        layer: templeLayer,
+                        name: "Temple in Bangkok", // ชื่อสำหรับแสดง data source
+                        searchFields: ["name", "age"], // Search by cafe name & address
+                        displayField: "name",
+                        exactMatch: false,
+                        outFields: ["*"],
+                        placeholder: "🔍 ค้นหาวัดในกรุงเทพฯ...",
+                        suggestionTemplate: "{name} - {age}",
+                        popupTemplate: {
+                            title: "{name}",
+                            content: `
+                        <b>🛕 ที่อยู่:</b> {address} <br>
+                        <b>📜 อายุ:</b> {age} ปี<br>
+                        <b>📄 เกี่ยวกับวัด:</b> {description} <br>
+                        <b>🕒 เวลาเปิด-ปิด:</b> {opening_hours} <br>
+                        <b>💰 ค่าเข้า:</b> {entrance_fee} <br><br>
+                        <img src="{image}" alt="Temple Image" width="100%">
+                `,
+                        },
+                    },
+                    // Search School
+                    {
+                        layer: SchoolinBankokFeatureLayer,
+                        name: "School in Bangkok", // ชื่อสำหรับแสดง data source
+                        searchFields: ["school_name", "school_type"], // Search by cafe name & address
+                        displayField: "school_name",
+                        exactMatch: false,
+                        outFields: ["*"],
+                        placeholder: "🔍 ค้นหาโรงเรียนในกรุงเทพฯ...",
+                        suggestionTemplate: "{school_name} - {school_type}",
+                        popupTemplate: {
+                            title: "{school_name}",
+                            content: `
+                        <b>🏫 ที่อยู่:</b> {location} <br>
+                        <b>🎒 ประเภทโรงเรียน:</b> {school_type} <br>
+                        <b>📄 เกี่ยวกับโรงเรียน:</b> {description} <br>
+                        <b>🗓️ หลักสูตรการเรียน:</b> {curriculum} <br>
+                        <b>💰 ค่าเทอม:</b> {tuition_fee} <br>
+                        <b>🗒️ อายุ:</b> {age} <br>
+                        <b>🌐 เว็บไซต์:</b> <a href="{website}">คลิกที่นี่</a> <br><br>
+                        <img src="{Image_URL}" alt="School Image" width="100%">
+                `,
+                        },
+                    },
+                ],
+            });
+
+            view.ui.add(searchWidget, {
+                position: "top-right",
             });
         })
     </script>

@@ -254,7 +254,7 @@
                         <b>📄 เกี่ยวกับโรงเรียน:</b> {description} <br>
                         <b>🗓️ หลักสูตรการเรียน:</b> {curriculum} <br>
                         <b>💰 ค่าเทอม:</b> {tuition_fee} <br>
-                        <b>🗒️ อายุ:</b> {age} <br>
+                        <b>🗒️ อายุ:</b> {age} ปี<br>
                         <b>🌐 เว็บไซต์:</b> <a href="{website}">คลิกที่นี่</a> <br><br>
                         <img src="{Image_URL}" alt="School Image" width="100%">
                     `,
@@ -272,7 +272,7 @@
                 container: "viewDiv",
                 map: map,
                 center: [100.55, 13.7399],
-                zoom: 12,
+                zoom: 11,
             });
 
             const drawGraphicsLayer = new GraphicsLayer();
@@ -388,6 +388,17 @@
 
             view.ui.add(searchWidget, {
                 position: "top-right",
+            });
+
+            // 🔹 Change Renderer on Zoom
+            view.watch("zoom", function (newZoom) {
+                if (newZoom >= 15) {
+                    templeLayer.renderer = ClassBreaksRenderer; // Switch to pin renderer at higher zoom levels
+                    SchoolinBankokFeatureLayer.renderer = uniqueRender;
+                } else {
+                    templeLayer.renderer = heatmapRenderer; // Use heatmap renderer at lower zoom levels
+                    SchoolinBankokFeatureLayer.renderer = heatmapRenderer;
+                }
             });
         })
     </script>

@@ -79,9 +79,10 @@
             "esri/layers/FeatureLayer",
             "esri/widgets/Search",
             "esri/layers/CSVLayer",
+            "esri/renderers/HeatmapRenderer",
             "esri/widgets/Sketch/SketchViewModel",
             "esri/layers/GraphicsLayer",
-        ], function (Map, MapView, FeatureLayer, Search, CSVLayer, SketchViewModel, GraphicsLayer) {
+        ], function (Map, MapView, FeatureLayer, Search, CSVLayer, HeatmapRenderer, SketchViewModel, GraphicsLayer) {
 
             // สร้างข้อมูล csv เป็น String
             const csvTempleData = `
@@ -128,11 +129,52 @@
                 },
             };
 
+            const ClassBreaksRenderer = {
+                type: "class-breaks",
+                field: "age",
+                classBreakInfos: [
+                    {
+                        minValue: 0,
+                        maxValue: 100,
+                        symbol: {
+                            type: "picture-marker",
+                            url: "https://cdn-icons-png.freepik.com/256/7110/7110282.png?ga=GA1.1.1278761421.1742035229&semt=ais_hybrid",
+                            width: "48px",
+                            height: "48px"
+                        },
+                        label: "วัดใหม่ (น้อยกว่า 100 ปี)"
+                    },
+                    {
+                        minValue: 101,
+                        maxValue: 200,
+                        symbol: {
+                            type: "picture-marker",
+                            url: "https://cdn-icons-png.flaticon.com/128/2095/2095637.png",
+                            width: "48px",
+                            height: "48px"
+                        },
+                        label: "วัดทั่วไป (101 - 200 ปี)"
+                    },
+                    {
+                        minValue: 201,
+                        maxValue: Infinity,
+                        symbol: {
+                            type: "picture-marker",
+                            url: "https://cdn-icons-png.flaticon.com/128/7224/7224114.png",
+                            width: "48px",
+                            height: "48px"
+                        },
+                        label: "โบราณวัด (มากกว่า 200 ปี)"
+                    },
+                ],
+            };
+
             // 🔹 สร้าง CSV Layer
             const templeLayer = new CSVLayer({
                 url: csvUrl,
                 latitudeField: "latitude",
                 longitudeField: "longitude",
+                renderer: ClassBreaksRenderer,
                 popupTemplate: {
                     title: "{name}",
                     content: `
@@ -144,45 +186,6 @@
                         <img src="{image}" alt="Temple Image" width="100%">
                     `,
                 },
-                renderer: {
-                    type: "class-breaks",
-                    field: "age",
-                    classBreakInfos: [
-                        {
-                            minValue: 0,
-                            maxValue: 100,
-                            symbol: {
-                                type: "picture-marker",
-                                url: "https://cdn-icons-png.freepik.com/256/7110/7110282.png?ga=GA1.1.1278761421.1742035229&semt=ais_hybrid",
-                                width: "48px",
-                                height: "48px"
-                            },
-                            label: "วัดใหม่ (น้อยกว่า 100 ปี)"
-                        },
-                        {
-                            minValue: 101,
-                            maxValue: 200,
-                            symbol: {
-                                type: "picture-marker",
-                                url: "https://cdn-icons-png.flaticon.com/128/2095/2095637.png",
-                                width: "48px",
-                                height: "48px"
-                            },
-                            label: "วัดทั่วไป (101 - 200 ปี)"
-                        },
-                        {
-                            minValue: 201,
-                            maxValue: Infinity,
-                            symbol: {
-                                type: "picture-marker",
-                                url: "https://cdn-icons-png.flaticon.com/128/7224/7224114.png",
-                                width: "48px",
-                                height: "48px"
-                            },
-                            label: "โบราณวัด (มากกว่า 200 ปี)"
-                        }
-                    ]
-                }
             });
 
             const uniqueRender = {
@@ -315,7 +318,7 @@
                     // Search Temple
                     {
                         layer: templeLayer,
-                        name: "🛕 Temple in Bangkok", 
+                        name: "🛕 Temple in Bangkok",
                         searchFields: ["name", "address"], // Search by cafe name & address
                         displayField: "name",
                         exactMatch: false,

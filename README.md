@@ -44,6 +44,11 @@
 
 ---
 
+## Demo
+ดูการเดโมของโปรเจกต์นี้ได้ที่: [ลิงก์](https://iamnotbibia.github.io/Project-Geo-Informatics-Application-Development/)
+
+---
+
 ### **Developers:**
 - Developer 1: 653380206-2 นางสาวปาริชาติ หงษ์ษา (โดนัท)
 - Developer 2: 653380323-8 นางสาวมณิฐชญาณ์ ธมนันท์พงษา (เมษา)

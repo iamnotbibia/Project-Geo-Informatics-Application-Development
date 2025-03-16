@@ -13,6 +13,19 @@
       margin: 0;
       padding: 0;
     }
+
+    #title {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 10px;
+      z-index: 10;
+    }
   </style>
   <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
   <script>
@@ -25,6 +38,7 @@
 </head>
 
 <body>
+  <div id="title">🐻 เพิ่มข้อมูลโรงเรียนในกรุงเทพฯ! </div>
   <div id="viewDiv"></div>
 
   <script>
